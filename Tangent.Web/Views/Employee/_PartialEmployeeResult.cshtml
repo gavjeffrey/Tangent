@@ -1,0 +1,38 @@
+﻿@model List<Employee>
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Username</th>
+                <th>Phone Number</th>
+                <th>Gender</th>
+                <th>Age</th>
+                <th>Birth date</th>
+                <th>Days to birtday</th>
+                <th>Position</th>
+                <th>Level</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int x = 0; x < Model.Count; x++)
+            {
+                <tr>
+                    <th scope="row">@(x + 1)</th>
+                    <td>@Model[x].User.First_name</td>
+                    <td>@Model[x].User.Last_name</td>
+                    <td>@Model[x].User.UserName</td>
+                    <td>@Model[x].Phone_number</td>
+                    <td>@Model[x].Gender</td>
+                    <td>@Model[x].Age</td>
+                    <td>@Model[x].Birth_date</td>
+                    <td>@Model[x].Days_to_birthday</td>
+                    <td>@Model[x].Position.Name</td>
+                    <td>@Model[x].Position.Level</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

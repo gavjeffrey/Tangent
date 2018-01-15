@@ -1,0 +1,206 @@
+﻿@model DashboardViewModel
+@{
+    ViewData["Title"] = "Home Page";
+}
+<div class="row">
+    <div class="col-lg-12">
+        <h1 class="page-header">Dashboard</h1>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-4 col-md-4">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-xs-3">
+                        <i class="fa fa-user fa-5x"></i>
+                    </div>
+                    <div class="col-xs-9 text-right">
+                        <div class="huge">
+                            @Model.NumberOfEmployees
+                        </div>
+                        <div>Number of employees</div>
+                    </div>
+                </div>
+            </div>
+            <a href="#">
+                <div class="panel-footer">
+                    <span class="pull-left">View Details</span>
+                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                    <div class="clearfix"></div>
+                </div>
+            </a>
+        </div>
+    </div>
+    <div class="col-lg-4 col-md-4">
+        <div class="panel panel-green">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-xs-3">
+                        <i class="fa fa-birthday-cake fa-5x"></i>
+                    </div>
+                    <div class="col-xs-9 text-right">
+                        <div class="huge">
+                            @Model.BirthdaysThisMonth
+                        </div>
+                        <div>birthdays this month!</div>
+                    </div>
+                </div>
+            </div>
+            <a href="#">
+                <div class="panel-footer">
+                    <span class="pull-left">View Details</span>
+                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                    <div class="clearfix"></div>
+                </div>
+            </a>
+        </div>
+    </div>
+    <div class="col-lg-4 col-md-4">
+        <div class="panel panel-yellow">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-xs-3">
+                        <i class="fa fa-inbox fa-5x"></i>
+                    </div>
+                    <div class="col-xs-9 text-right">
+                        <div class="huge">
+                            @Model.PendingReviews
+                        </div>
+                        <div>Pending Reviews</div>
+                    </div>
+                </div>
+            </div>
+            <a href="#">
+                <div class="panel-footer">
+                    <span class="pull-left">View Details</span>
+                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                    <div class="clearfix"></div>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-8 col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                Ethnicity
+            </div>
+            <div class="panel-body">
+                <input type="hidden" id="race-data" value="@Model.EthnicityGroups" />
+                <div id="race-bar-graph">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4 col-md-4">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                Gender split
+            </div>
+            <div class="panel-body">
+                <input type="hidden" id="gender-data" value="@Model.GenderGroups" />
+                <div id="gender-donut">
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<div class="row">
+    <div class="col-lg-8 col-md-8">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                Employee count over the years
+            </div>
+            <div class="panel-body">
+                <input type="hidden" id="employee-year-data" value="@Model.EmployeeCountOverYears" />
+                <div id="employee-year-line">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4 col-md-4">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                Positions
+            </div>
+            <div class="panel-body">
+                <input type="hidden" id="position-data" value="@Model.PositionGroups" />
+                <div id="position-donut">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            var raceData = JSON.parse($('#race-data').val());
+
+            var raceGraph = Morris.Bar({
+                element: 'race-bar-graph',
+                data: raceData,
+                xkey: 'xAxis',
+                ykeys: ['yAxis'],
+                labels: ['Count'],
+                barColors: function (row, series, type) {
+                    switch (row.x) {
+                        case 0:
+                            return "#AD1D28"
+                        case 1:
+                            return "#DEBB27";
+                        case 2:
+                            return "#fec04c";
+                        case 3:
+                            return "#1AB244";
+                        case 4:
+                            return "#1CCCC4";
+                        default:
+                            return "#1AB244";
+                    }
+                }
+            });
+
+            var genderData = JSON.parse($('#gender-data').val());
+            var genderGraph = Morris.Donut({
+                element: 'gender-donut',
+                data: genderData
+            });
+
+            var positionData = JSON.parse($('#position-data').val());
+            var positionGraph = Morris.Donut({
+                element: 'position-donut',
+                data: positionData
+            });
+
+            var empOverYearsData = JSON.parse($('#employee-year-data').val());
+            var empLineGraph = Morris.Line({
+                element: 'employee-year-line',
+                data: empOverYearsData,
+                xkey: 'xAxis',
+                ykeys: ['aSeries'],
+                labels: ['Series A'],
+                yLabelFormat: function (y) {
+                    return y = Math.round(y);
+                }
+            });
+
+            $(window).on("resize", function () {                
+                if (!window.recentResize) {
+                    raceGraph.redraw();
+                    genderGraph.redraw();
+                    positionGraph.redraw();
+                    empLineGraph.redraw();
+                    window.recentResize = true;
+                    setTimeout(function () { window.recentResize = false; }, 200);
+                }
+            });
+        });
+    </script>
+}

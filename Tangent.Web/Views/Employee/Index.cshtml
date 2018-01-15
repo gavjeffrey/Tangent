@@ -1,0 +1,100 @@
+﻿@model EmployeeViewModel
+@{
+    ViewData["Title"] = "Employees";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-lg-12">
+        <h1 class="page-header">Employees</h1>
+    </div>
+</div>
+
+<div class="row">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            Search
+        </div>
+        <div class="panel-body">
+            <form asp-area="" asp-controller="Employee" asp-action="SearchEmployee" method="post" id="findEmployeeForm">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="RaceSelection"></label>
+                        <select asp-for="RaceSelection"
+                                class="form-control"
+                                asp-items="@Model.Race"></select>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="PositionSelection"></label>
+                        <select asp-for="PositionSelection"
+                                class="form-control"
+                                asp-items="@Model.Position"></select>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="GenderSelection"></label>
+                        <select asp-for="GenderSelection"
+                                class="form-control"
+                                asp-items="@Model.Gender"></select>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="Email"></label>
+                        <input asp-for="Email" class="form-control" />
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-default">Search</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            Results
+        </div>
+        <div class="panel-body">
+            <div class="col-lg-12" id="results">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#findEmployeeForm").submit(function (e) {
+                e.preventDefault();
+                var frm = $("#findEmployeeForm");
+                var data = {};
+                $.each(this, function (i, v) {
+                    var input = $(v);
+                    data[input.attr("name")] = input.val();
+                    delete data["undefined"];
+                });
+                $.ajax({
+                    contentType: "application/json; charset=utf-8",
+                    type: frm.attr("method"),
+                    url: frm.attr("action"),
+                    data: JSON.stringify(data),
+                    success: function (data) {
+                        $('#results').html(data);
+                    },
+                    error: function (response) {
+                        alert('Oops something went wrong.');
+                    }
+                });
+            });
+        });
+    </script>
+}

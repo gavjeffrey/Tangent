@@ -82,7 +82,8 @@ namespace Tangent.Web.Controllers
             if (!string.IsNullOrWhiteSpace(EmployeeSearch.Email))
             {
                 queryUrl.Append("email__contains=");
-                queryUrl.Append(EmployeeSearch.Email);                
+                queryUrl.Append(EmployeeSearch.Email);
+                queryUrl.Append("&");
             }
 
             queryUrl.Length--; //will remove & or ? 

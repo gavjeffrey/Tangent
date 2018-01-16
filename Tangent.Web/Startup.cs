@@ -50,7 +50,7 @@ namespace Tangent.Web
                 options.Cookie.HttpOnly = true;
             });
 
-            //add singleton httpclient connection
+            //add singleton httpclient connection. Recommended to be singleton - https://aspnetmonsters.com/2016/08/2016-08-27-httpclientwrong/ or http://byterot.blogspot.co.za/2016/07/singleton-httpclient-dns.html
             services.AddSingleton<IHttpClient>(impl =>
             {
                 return new HttpClient(Configuration["TangentBaseUrl"], Configuration["TangentAuthUrl"]);
